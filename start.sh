@@ -1,0 +1,3 @@
+echo start $1...
+nohup $1 > /dev/null &
+echo done.
