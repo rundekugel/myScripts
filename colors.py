@@ -1,7 +1,9 @@
-
-#!/bin/usr python
+#!/usr/bin/env python
 """
 draw color palette in HTML for TFT colors possible with 2 bit per color
+useage example: 
+ ./colors.py > c.htm
+ firefox c.htm
 """
 
 import time
@@ -31,7 +33,7 @@ for r in range(4):
 print("</table>")
  
  
-while(1):
-  time.sleep(.1)
+#while(1):
+#  time.sleep(.1)
   
 #eof
