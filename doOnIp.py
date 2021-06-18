@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-#(C) by rundekugel @github
+"""
+(C) by rundekugel @github
+put this in your autostart folder, helps to start some apps depending on your location.
+"""
 
 import sys
 import os
