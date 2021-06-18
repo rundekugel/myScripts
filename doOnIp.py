@@ -37,7 +37,6 @@ def main():
   ips = socket.gethostbyname_ex(socket.gethostname())[2]
 
   print(ips)
-
   nets = []
 
   for ip in ips:
@@ -52,11 +51,8 @@ def main():
     if "10.99." in ip:
       nets.append("train")
       
-
   print("locations:")
   print(nets)
-
-  #nets=[]
 
   if nets and not "office"  in nets:
     print("vpn...")
@@ -76,8 +72,7 @@ def main():
   ti=15;d=3
   for i in range(ti*d):
     if sys.version_info[0]==3:
-      #print("closeing in %03.1f sec...\r"%(ti -float(i)/d), end='')
-      print("closing ")
+      print("closeing in %03.1f sec...\r"%(ti -float(i)/d), end='')
     else:
       print("cloeing in %03.1f sec...\r"%(ti -float(i)/d) ),
     time.sleep(float(1)/d)
