@@ -14,6 +14,7 @@
 #    http://www.denso-wave.com/qrcode/faqpatent-e.html
 #
 # 2014 enhanced by lifesim.de
+# 2021 updated to fit to python3
 
 """QR Code Generator for Python
 
@@ -29,8 +30,12 @@
     # generate with auto type number
     # qr = QRCode.getMinimumQRCode('here comes qr!', ErrorCorrectLevel.M)
 
-    print qConsole(qr)
+    print( qConsole(qr))
 """
+
+import os
+
+__version__ = "1.0.0"
 
 class QRCode:
 
@@ -821,6 +826,7 @@ class BitBuffer:
         return ''.join('1' if self.get(i) else '0'
             for i in range(self.getLengthInBits() ) )
 
+#added by lifesim.de            
 def qConsole(qr, whiteChar = " ", blackChar = chr(219), negativ = True):
   # create an image
   if negativ:
@@ -828,7 +834,7 @@ def qConsole(qr, whiteChar = " ", blackChar = chr(219), negativ = True):
     whiteChar = blackChar
     blackChar = t
     
-  res = whiteChar * (qr.getModuleCount() +2) +'\r\n'
+  res = whiteChar * (qr.getModuleCount() +2) +os.linesep
   for r in range(qr.getModuleCount() ):
     res += whiteChar
     for c in range(qr.getModuleCount() ):
@@ -836,16 +842,25 @@ def qConsole(qr, whiteChar = " ", blackChar = chr(219), negativ = True):
         res += blackChar
       else:
         res += whiteChar     
-    res += whiteChar + '\r\n'
-  res += whiteChar *(qr.getModuleCount() +2)
+    res += whiteChar + os.linesep
+  res += whiteChar *(qr.getModuleCount() +2)  
+  res += whiteChar + os.linesep
   return res
+  
+def simpleConsole(text):
+  qr = QRCode()
+  qr.setTypeNumber(4)
+  qr.setErrorCorrectLevel(ErrorCorrectLevel.M)
+  qr.addData(text)
+  qr.make()
+  return qConsole(qr, blackChar="@")
   
 if __name__ == "__main__":
   import sys
   #from qrcode import QRCode, ErrorCorrectLevel
   
-  print "QR Code for Console. Example from gaul1-at-lifesim.de"
-  print "Donations: BTC: 1KUUuU4mjtQLgPvTyaDZ5aJrz1waaSSwQa"
+  print ("QR Code for Console. Example from gaul1-at-lifesim.de V"+__version__)
+  print ("Donations: BTC: 1KUUuU4mjtQLgPvTyaDZ5aJrz1waaSSwQa")
   
   content = "http://lifesim.de/"
   
@@ -861,5 +876,5 @@ if __name__ == "__main__":
 
   # generate with auto type number
   # qr = QRCode.getMinimumQRCode('here comes qr!', ErrorCorrectLevel.M)
-  print "Content: "+ content
-  print qConsole(qr)
+  print("Content: "+ content)
+  print(qConsole(qr))
