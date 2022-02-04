@@ -16,7 +16,12 @@ except ImportError:
     import tkinter as tk
 
 
-d1={"Du":"du","Euch":"euch", "Ihr":"ihr", "@platzhalter":"neuer Text"}
+d1={"Du":"du","Euch":"euch", "Dein":"dein","Deiner":"deiner",
+  "Ihr":"ihr", "@platzhalter":"neuer Text",
+  "Euer":"euer"
+    }
+
+verbosity = 0
 
 class seperators:
   space=" "
@@ -49,14 +54,9 @@ class Guicb:
             self._top = tk.Tk()
             top = self._top
         top.geometry("300x50+50+50")
-        #top.minsize(120, 1)
-        #top.maxsize(5534, 1666)
+
         top.resizable(1,  1)
         top.title("Change Clipboard content")
-        # top.configure(background="#d9d9d9")
-        # top.configure(highlightbackground="#d9d9d9")
-        # top.configure(highlightcolor="black")
-
 
         self.BChange = tk.Button(top)
         self.BChange.place(relx=0.1, rely=0.1, height=24, width=50)
@@ -73,9 +73,9 @@ class Guicb:
       self.letterlist = ll
 
     def doChange(self):
-      print("test")
       cb=self._top.selection_get(selection="CLIPBOARD")
-      print(cb)
+      if verbosity >2:
+        print(cb)
       pos,leng =0, len(cb)
       keys = self._dict.keys()
       changed = 0
