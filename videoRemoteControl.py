@@ -1,14 +1,12 @@
 #!/usr/bin/python3.9
 """
-use to remote control volume and brightness for linux notebook monitors
+use to remote control volume and brightness for notebook monitors
 use http call android app 'HTTP Shortcuts' or http-bookmarks
 
  http://<ip-address>:8888/volp=33    ==> set volume to 33%
  http://<ip-address>:8888/bright=63    ==> set volume to 63%
 
 call this script with param -p=<port-number> to listen on different port.
-
-by lifesim.de 2022
 """
 
 import sys, os
@@ -16,6 +14,9 @@ print(sys.version)
 import socketserver
 import time
 import subprocess
+
+__author__ = "lifesim.de"
+__version__= "1.0"
 
 class globs:
   verbose=2
@@ -31,7 +32,16 @@ class handler(socketserver.BaseRequestHandler):
     if globs.verbose:
       print(self.data)
     try:
-      self.request.sendall(b"HTTP/1.1 200 OK\r\nConnection: close\r\n")
+      if 0:
+        self.request.sendall(b"HTTP/1.1 200 OK\r\n"+
+          "Content-Length: 3\r\n" +
+          "Content-Type: text/plain\r\n" +
+          "Connection: close\r\n" +
+          "\r\n"
+          +"nok.\r\n"
+          )
+      else:
+        self.request.sendall(b"ok.\r\n")
     except:
       pass
     if b"close!" in self.data:
