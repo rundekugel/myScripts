@@ -16,7 +16,8 @@ import time
 import subprocess
 
 __author__ = "lifesim.de"
-__version__= "1.0.1"
+__version__= "1.0.2"
+
 
 class globs:
   verbose=2
@@ -28,24 +29,12 @@ class globs:
 
 class handler(socketserver.BaseRequestHandler):
   def handle(self):
+    r="-"
     self.data = self.request.recv(1024).strip()
     if globs.verbose:
       print(self.data)
-    try:
-      if 0:
-        self.request.sendall(b"HTTP/1.1 200 OK\r\n"+
-          "Content-Length: 3\r\n" +
-          "Content-Type: text/plain\r\n" +
-          "Connection: close\r\n" +
-          "\r\n"
-          +"nok.\r\n"
-          )
-      else:
-        self.request.sendall(b"ok.\r\n")
-    except:
-      pass
     if b"close!" in self.data:
-      """todo: kill programm"""
+      """todo: kill programm softly"""
       globs.doit = 0
       print("close...")
       globs.sock.server_close()
@@ -56,15 +45,28 @@ class handler(socketserver.BaseRequestHandler):
       v=self.data.split(b"=")[1].split(b" ")[0].decode()
       v=int(v)
       print("set vol:"+str(v))
-      os.system("/usr/bin/env amixer -D pulse sset Master "+str(v)+"%")
+      r=os.system("/usr/bin/amixer -D pulse sset Master "+str(v)+"%")
     if b"bright=" in self.data:
       v=self.data.split(b"=")[1].split(b" ")[0].decode()
       v=int(v)
       print("set brightness:"+str(v))
       v=int(globs.brightMax *v/100)
-      os.system("echo "+str(v)+" > /sys/class/backlight/intel_backlight/brightness")
+      r=os.system("echo "+str(v)+" > /sys/class/backlight/intel_backlight/brightness")
+    try:
+      if 0:
+        self.request.sendall(b"HTTP/1.1 200 OK\r\n"+
+          "Content-Length: 3\r\n" +
+          "Content-Type: text/plain\r\n" +
+          "Connection: close\r\n" +
+          "\r\n"
+          +"ok.\r\n"
+          )
+      else:
+        self.request.sendall(f"ok.{r}.\r\n".encode())
+    except:
+      pass
 
-
+# ----------    
 def main():
   for p in sys.argv:
     p0,p1=p,""
