@@ -1,10 +1,10 @@
-#!/usr/bin/python3.9
+#!/usr/bin/python3
 """
 use to remote control volume and brightness for notebook monitors
 use http call android app 'HTTP Shortcuts' or http-bookmarks
 
- http://<ip-address>:8888/volp=33    ==> set volume to 33%
- http://<ip-address>:8888/bright=63    ==> set volume to 63%
+ http://<ip-address>:9933/volp=33    ==> set volume to 33%
+ http://<ip-address>:9933/bright=63    ==> set brightness of integrated monitor to 63%
 
 call this script with param -p=<port-number> to listen on different port.
 """
@@ -16,13 +16,13 @@ import time
 import subprocess
 
 __author__ = "lifesim.de"
-__version__= "1.0"
+__version__= "1.0.1"
 
 class globs:
   verbose=2
   doit=1
   sock=None
-  port = 8888
+  port = 9933
   #volMax = 65536
   brightMax = 2000
 
