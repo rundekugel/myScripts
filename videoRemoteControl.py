@@ -66,8 +66,16 @@ class handler(socketserver.BaseRequestHandler):
     except:
       pass
 
+def getMaxBrightness():
+  v=None
+  with open("/sys/class/backlight/intel_backlight/max_brightness",'r') as f:
+    v = f.read()
+  return int(v)
+
 # ----------    
 def main():
+  v = getMaxBrightness()
+  if v: globs.brightMax = v
   for p in sys.argv:
     p0,p1=p,""
     if "=" in p: 
