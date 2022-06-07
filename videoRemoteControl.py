@@ -10,13 +10,11 @@ call this script with param -p=<port-number> to listen on different port.
 """
 
 import sys, os
-print(sys.version)
 import socketserver
 import time
-import subprocess
 
 __author__ = "lifesim.de"
-__version__= "1.0.2"
+__version__= "1.0.3"
 
 
 class globs:
@@ -91,7 +89,7 @@ def main():
                      socketserver.socket.SO_REUSEADDR, 1 )  
   s.serve_forever()
   print("n serve")
-  while doit:
+  while globs.doit:
     time.sleep(1)
   s.server_close()
   print("done.")
@@ -99,3 +97,4 @@ def main():
 if __name__ == "__main__":
   main()
   
+#eof
