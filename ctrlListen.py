@@ -4,9 +4,11 @@ use to remote control volume and brightness for notebook monitors
 use http call android app 'HTTP Shortcuts' or http-bookmarks
 
  http://<ip-address>:9933/volp=33    ==> set volume to 33%
- http://<ip-address>:9933/bright=63    ==> set brightness of integrated monitor to 63%
+ http://<ip-address>:9933/bright=63  ==> set brightness of integrated monitor to 63%
+ http://<ip-address>:9933/space!     ==> send a space key stroke
+ http://<ip-address>:9933/close!     ==> close this
 
-call this script with param -p=<port-number> to listen on different port.
+call this script with param -p=<port-number> to listen on different port. or put it in crontab.
 """
 
 import sys, os
