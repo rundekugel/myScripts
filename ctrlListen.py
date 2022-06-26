@@ -16,7 +16,7 @@ import time
 import subprocess
 
 __author__ = "lifesim.de"
-__version__= "1.0.1"
+__version__= "1.1.0"
 
 
 class globs:
@@ -58,6 +58,9 @@ class handler(socketserver.BaseRequestHandler):
       v=int(globs.brightMax *v/100)
       r=os.system("echo "+str(v)+" > /sys/class/backlight/intel_backlight/brightness")
       logit("brightness:"+str(v)+";"+str(r))
+    if b"space!" in self.data:
+      r=os.system("xdotool key space")
+      logit("space:"+str(r), stdout=1)
     try:
       if 0:
         self.request.sendall(b"HTTP/1.1 200 OK\r\n"+
