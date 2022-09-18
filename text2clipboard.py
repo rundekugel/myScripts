@@ -2,18 +2,16 @@
 
 """
 use in thunar actions for copy path to clipboard
+similar to xclip, but with gui notification
 """
 
 
-import sys
+import sys,os
 import pyperclip
 from plyer import notification
 
 path=sys.argv[1:]
-if len(path)>1:
-	path=str(path)
-else:
-	path=path[0]
+path=os.linesep.join(path).strip()
 notification.notify("Copy Path to Clipboard", path)
 pyperclip.copy(path)
 
