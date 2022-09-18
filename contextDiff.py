@@ -8,6 +8,10 @@ action2: contextDiff.py 2 %F
 
 import os
 import sys
+try: 
+	from plyer import notification
+except:
+	notification=None
 
 tmpfile = "/tmp/contextDifftmpdifA"
 debug =0
@@ -20,7 +24,9 @@ if debug:
 if sys.argv[1]=="1":
    with open(tmpfile,"w") as f:
       f.write(str(sys.argv[2]))
-
+   if notification:
+	   notification.notify("Noted for diff", "Select 2nd file with 'diff2' to diff with "+
+		os.linesep+sys.argv[2],timeout=5,app_icon="gnome-session-switch") 
 def doit():
    if sys.argv[1]=="2":
       if not os.path.exists(tmpfile):
