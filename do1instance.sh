@@ -31,7 +31,7 @@ if ! echo $$ > $pidfile ; then
 echo pidfile creation failed "$pidfile"
 fi
 #do your thing here
-$1
+$*
 sleep 1
 
 rm $pidfile
