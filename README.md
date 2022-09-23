@@ -2,11 +2,11 @@
 tiny useful scripts
 
 
-## clipboardchanger.py 
+## [clipboardchanger.py](clipboardchanger.py)
 change content of clibboard
 find keywords and exchange them
 
-## do1instance.sh
+## [do1instance.sh]
 start a programm only, if not in PID list
 
 ## gitinfo.sh
