@@ -21,29 +21,40 @@ __author__ = "gaul1 - at - lifesim.de"
 
 debug = 1
 
+
+def xchangeTag(tag,line,text):
+   """
+   tag without $$, line, new text inside tag
+   """
+   ll= line.split("$"+tag)
+   nl = ll[0]
+   for l in ll[1:]:
+      if not "$" in l:
+         continue
+      l=l.split("$",1)[1]
+      nl+="$"+tag +": "+text+" $"+l
+   return nl   
+
 def doit():
    hash=""
+   newDate=""
    loginfo=""
-   r = sp.run('git log -n 1 --format=format:%h'.split(" "), capture_output=True)
+   r = sp.run('git log --date=iso -n 1 --format=format:%ad;%h'.split(" "), capture_output=True)
    if r.returncode:
-         hash="---"
+         hash="---"; newDate="---"
          al = "error git hash reading"+str(r.stderr)
    else:      
-      hash = r.stdout.decode()
-      hash.replace('"','')
-
+      newDate, hash = r.stdout.decode().split(";")
+      # hash.replace('"','')
+      
    for line in sys.stdin:
      loginfo+=line
+     # for tag in ("Rev","Date"):
      if "$Rev" in line:
-         ll= line.split("$Rev")
-         nl = ll[0]
-         for l in ll[1:]:
-            if not "$" in l:
-               continue
-            l=l.split("$",1)[1]
-            loginfo+="$Rev: "+hash+" $"+l
-         line = nl
-         loginfo+=line
+         line = xchangeTag("Rev", line, hash)
+     if "$Date" in line:
+         line = xchangeTag("Date", line, newDate)
+     loginfo+=line
      sys.stdout.write(line)
 
    if debug:
