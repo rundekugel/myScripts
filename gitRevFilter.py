@@ -19,7 +19,7 @@ __version__ = "0.1"
 __revision__ = "$Rev:$"[5:-2]
 __author__ = "gaul1 - at - lifesim.de"
 
-debug = 1
+debug = 0
 
 
 def xchangeTag(tag,line,text):
