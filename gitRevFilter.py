@@ -19,7 +19,7 @@ import subprocess as sp
 import time
 
 __version__ = "0.2"
-__revision__ = "$Rev: 893fb9f $"[6:-2]
+__revision__ = "$Rev: f9abffe $"[6:-2]
 __author__ = "gaul1 - at - lifesim.de"
 
 
@@ -77,10 +77,10 @@ def doit():
   for line in sys.stdin:
     loginfo += line
     # for tag in ("Rev","Date"):
-     if "$Rev" in line:
-         line = xchangeTag("Rev", line, hash)
-     if "$Date" in line:
-         line = xchangeTag("Date", line, newDate)
+    if "$Rev" in line:
+       line = xchangeTag("Rev", line, hash)
+    if "$Date" in line:
+       line = xchangeTag("Date", line, newDate)
     loginfo += line
     sys.stdout.write(line)
 
