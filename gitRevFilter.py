@@ -19,7 +19,7 @@ import subprocess as sp
 import time
 
 __version__ = "0.2"
-__revision__ = "$Rev: 01814d2 $"[5:-2]
+__revision__ = "$Rev: dcbd19f $"[6:-2]
 __author__ = "gaul1 - at - lifesim.de"
 
 
@@ -30,17 +30,16 @@ class globs:
 
 def xchangeTag(tag, line, text):
   """
-   tag without $$, line, new text inside tag
+   tag without $$, line to xchange, new text inside tag
    """
   ll = line.split("$" + tag)
   nl = ll[0]
   for l in ll[1:]:
     if not "$" in l:
-      continue
+      return line
     l = l.split("$", 1)[1]
     nl += "$" + tag + ": " + text + " $" + l
   return nl
-
 
 def tcpTx(text):
   try:
@@ -60,7 +59,6 @@ def tcpTx(text):
       s.close()
   except:
     pass
-
 
 def doit():
   hash = ""
@@ -101,7 +99,8 @@ def install(args):
   for arg in args:
     p = arg.split("=", 1);
     p1 = ""
-    if len(p) > 1: p, p1 = p
+    if len(p) > 1: p1 = p[1]
+    p = p[0]
     if p == "-f": filter = p1.split(",")
     if p == "-n": myfiltername = p1
     if p == "-s": attr.append("s")
@@ -134,7 +133,8 @@ def uninstall(args):
   for arg in args:
     p = arg.split("=", 1);
     p1 = ""
-    if len(p) > 1: p, p1 = p
+    if len(p) > 1: p1 = p[1]
+    p = p[0]
     if p == "-n":
       myfiltername = p1
 
@@ -153,7 +153,8 @@ if __name__ == "__main__":
     for arg in a[1:]:
       p = arg.split("=", 1);
       p1 = ""
-      if len(p) > 1: p, p1 = p
+      if len(p) > 1: p1 = p[1]
+      p=p[0]
       if p in ("-h", "?", "--help", "-?"):
         print("gitRevisionFilter " + __version__ + "." + __revision__)
         print(__doc__)
