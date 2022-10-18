@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """
 replace tags when git commit or git checkout
-usage: install [-global] -f=<filefilter> [-n=<filtername>]
+this file must be in executable path
+usage: gitRevFilter install [-global] -f=<filefilter> [-n=<filtername>]
  -global doesn't work yet
  -f=filefilter: i.e. *.c, *.txt,*.py,... may be commaseperated, but no spaces
  -n=filtername: a new git filter name as text
@@ -18,7 +19,7 @@ import subprocess as sp
 import time
 
 __version__ = "0.2"
-__revision__ = "$Rev:$"[5:-2]
+__revision__ = "$Rev: 01814d2 $"[5:-2]
 __author__ = "gaul1 - at - lifesim.de"
 
 
@@ -65,13 +66,6 @@ def doit():
   hash = ""
   newDate = ""
   loginfo = ""
-  if 0:
-    for arg in sys.argv[1:]:
-      p = arg.split("=", 1);
-      p1 = ""
-      if len(p) > 1: p, p1 = p
-      if p == "-s": attr.append("s")
-      if p == "-c": attr.append("c")
   tcpTx("test1")
   r = sp.run('git log --date=iso -n 1 --format=format:%ad;%h'.split(" "), capture_output=True)
   if r.returncode:
@@ -85,16 +79,13 @@ def doit():
   for line in sys.stdin:
     loginfo += line
     # for tag in ("Rev","Date"):
-    if "$Rev" in line:
-      line = xchangeTag("Rev", line, hash)
-    if "$Date" in line:
-      line = xchangeTag("Date", line, newDate)
+    if "      line = xchangeTag("Rev", line, hash)
+    if "      line = xchangeTag("Date", line, newDate)
     loginfo += line
     sys.stdout.write(line)
 
   tcpTx(str(loginfo))
   return 0
-
 
 def install(args):
   if "-global" in args:
@@ -106,7 +97,6 @@ def install(args):
   attr = []
   me=me.replace("\\", "\\\\")
   print("install handler: " + me)
-
   print("install to this repo path only")
   for arg in args:
     p = arg.split("=", 1);
@@ -138,7 +128,6 @@ def install(args):
   print("done.")
   return 0
 
-
 def uninstall(args):
   print("uninstall to this repo path only.")
   myfiltername = "gitRevFilter"
@@ -155,9 +144,7 @@ def uninstall(args):
   r = sp.run(run.split(" "))
   run = "git config --unset filter." + myfiltername + ".dbgPort"
   sp.run(run.split(" "))
-
   return 0
-
 
 if __name__ == "__main__":
   a = sys.argv
@@ -175,7 +162,7 @@ if __name__ == "__main__":
       if p == "-v": globs.verbosity = int(p1)
       if p == "-V": print("Version: " + __version__ + "." + __revision__)
     if "install".lower() in a[1:]:
-      sys.exit(install(sys.argv[1:]))
+      sys.exit(install(sys.argv))
     if "uninstall".lower() in a[1:]:
       sys.exit(uninstall(sys.argv[1:]))
   doit()
