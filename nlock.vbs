@@ -1,4 +1,4 @@
 set wsc = CreateObject("WScript.Shell")
-wsc.SendKeys ("{CAPSLOCK}")
+wsc.SendKeys ("{SCROLLLOCK}")
 rem wsc.SendKeys (bla)
 

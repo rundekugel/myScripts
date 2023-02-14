@@ -34,6 +34,8 @@ def winstart(cmdline, size=""):
 
 def main():
   print(sys.version)
+  #do always:
+  # winstart("C:\work\myScripts\myScripts\nolock.py", winsize.min)
   ips = socket.gethostbyname_ex(socket.gethostname())[2]
 
   print(ips)
