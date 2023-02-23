@@ -1,10 +1,22 @@
 #!/usr/bin/env python
-""" 
+"""
 python script to delete multiple builds from a TeamCity-server via http-rest-api
 (C)opyright by rundekugel 2023
 No warranty for lost data or anything else!
+
+usage:
+teamCityBuildDelete.py <projectId> [options]
+
+options:
+-p=<password>
+-u=<user>
+-v=<verbosity>
+-s=<server name>
+-n=<minimum buildnumnber>
+-x=<maximum buildnumnber>
 """
 
+import sys
 import requests
 import xmljson
 from xml.etree.ElementTree import fromstring
@@ -13,19 +25,49 @@ from xmljson import gdata
 def main():
    print("Delete some builds from teamcity...")
 
-   user = None # you may fill in your user here to prevent typing it always
+   # presets. Fill in your own settings here:
+   server = None  #  fqdn, example: "myTeamcity-server.org"
+   user = None    #  you may fill in your teamcity user here to prevent typing it always
    pw = None
-   user = input("Teamcity-User: ")
-   pw = input("Teamcity-Password: ")
-   locator = "TheProjectName"
+   locator = None  # the teamcity project identifier i.e. "MyProject_subproject"
 
    buildmin = 70  # the minimum buildnumber to be deleted
-   buildmax = 9001  # the maximum buildnumber to be deleted
+   buildmax = 12001  # the maximum buildnumber to be deleted
 
    verbosity = 1
    firstfound = None
 
-   prefix = f"https://{user}:{pw}@teamcity-example-server.org"
+
+   for p in sys.argv:
+      if p[0] != "-":
+         locator = p
+      if p[:2] == "-p":
+         pw = p[3:]
+      if p[:2] == "-u":
+         user = p[3:]
+      if p[:2] == "-s":
+         server = p[3:]
+      if p[:2] == "-h":
+         print(__doc__)
+         return
+      if p[:2] == "-v":
+         verbosity = int(p[3:])
+      if p[:2] == "-n":
+         buildmin = int(p[3:])
+      if p[:2] == "-x":
+         buildmax = int(p[3:])
+
+
+   if not user:
+      user = input("Teamcity-User: ")
+   if not pw:
+      pw = input("Teamcity-Password: ")
+   if not locator:
+      locator = input("Locator: ")
+   if not server:
+      server = input("Server name: ")
+
+   prefix = f"https://{user}:{pw}@{server}"
    next = f"/app/rest/builds/?locator=buildType:{locator}"
    while next:
       url = prefix + next
