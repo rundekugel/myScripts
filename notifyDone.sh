@@ -9,17 +9,18 @@ if [ "$prg" == "" ];then
 fi 
 
 d=1
-while [ $d == 1 ]
+while [ $d != 0 ]
 do 
- echo test for $prg
+ echo -en wait, while process \"$prg\" running... $d sec.\\r
+ d=$((d+1))
  sleep 1
  r=$(ps -A x)
  echo $r|grep "$prg" >/dev/null
  if [ $? != 0 ];then  
-   echo task gone: $r|grep "$prg"
    d=0
  fi
 done
-notify-send $1 finished.
+echo -e process \"$prg\" gone.
+notify-send "process \"$prg\" gone."
 #eof
 
