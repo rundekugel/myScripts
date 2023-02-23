@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+""" 
+python script to delete multiple builds from a TeamCity-server via http-rest-api
+(C)opyright by rundekugel 2023
+No warranty for lost data or anything else!
+"""
 
 import requests
 import xmljson
