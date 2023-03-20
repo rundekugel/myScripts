@@ -1,7 +1,8 @@
 #!/bin/bash
-
-read -p "taskname: " prg
-# prg=$1 # this doesn't work, 'cause it'll be found in tasklisk
+echo Wait for process vanish from list, and notify.
+read -p "Process name: " prg
+# todo: add working from cmdline
+# prg=$1 # this doesn't work, 'cause it'll be found in tasklist
 if [ "$prg" == "" ];then
   echo usage: $0 \<taskname\> \(optional with parameters\)
   echo you\'ll be notified, if task is finished
