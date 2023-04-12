@@ -11,13 +11,15 @@ params:
 -c=<comment>         optional explanation of new filetype.
 
 """
-# -a=<full application path>  application to open the files with the specific extension
+# todo: -a=<full application path>  application to open the files with the specific extension
 
 """
 debug info:
 ~/.config/mimeapps.list
 text/x-myvendor-mytype=myapplication.desktop
 ~/.local/share/applications
+~/.local/share/mime/application/
+~/.local/share/mime/packages/
 """
 
 
@@ -32,15 +34,24 @@ class globs:
    verbosity=1
 
    
-def dofiles(fileextension=None, vendor="ano", filetype=None, comment="", 
+def registerMimeType(fileextension=None, vendor="ano", filetype=None, comment="",
             apppath=None, force=0):
+   """
+   write xml-file and register new filetype with file-extension
+   :param fileextension: the extension i.e.: .test1
+   :param vendor:
+   :param filetype: a new name for a filetype
+   :param comment: a nice explanation
+   :param apppath: not used now
+   :param force: 1=overwrite existing file
+   :return: 0=ok
+   """
    if not filetype:
       raise Exception("Filetype must be set!")
    if not fileextension:
       raise Exception("Fileextension must be set!")
-   while fileextension[0]==".":
+   while fileextension[0] == ".":
       fileextension=fileextension[1:]
-   # fn = "/usr/share/mime/packages/" + vendor +"-"+ filetype +".xml"
    fn = "/tmp/" + vendor +"-"+ filetype +".xml"
    if not force and os.path.isfile(fn):
       raise Exception(f"File {fn} exists, already!")
@@ -54,16 +65,22 @@ def dofiles(fileextension=None, vendor="ano", filetype=None, comment="",
   <glob weight="60" pattern="*.{fileextension}"/>
 </mime-type>
 </mime-info>
-      """)
-   os.popen("xdg-mime install "+ fn)
-"""
-~/.config/mimeapps.list
-text/x-segger-ozone=ozone.desktop
-"""
-      
-      
-   
+   """)
+   # the following line registers mime-type and copies the xml to ~/.local/share/mime/packages/
+   return os.popen("xdg-mime install " + fn)._proc.wait()
+
+def modMimelist():
+   """
+   modificate the mime-list and register application
+   :return: 0=ok
+   """
+   return 0
+
 def main():
+   """
+   read cmd line params and start
+   :return: 0=ok
+   """
    fileextension=None
    vendor="extension"
    filetype=None
@@ -71,7 +88,7 @@ def main():
    comment=""
    force = False
    
-   if 1:
+   if 0:    # test
       fileextension=".test3"
       filetype="mytype3"
       apppath="~/prg/t/exe3.sh"
@@ -93,12 +110,14 @@ def main():
       if p == "-p": vendor = p1
       if p == "-t": filetype = p1
       if p == "-f": force = int(p1)
-      if p == "-a": apppath = p11
+      if p == "-a": apppath = p1
       if p == "-c": comment = p1
       if p == "-v": globs.verbosity = int(p1)
       if p == "-V": print("Version: " + __version__ + "." + __revision__)
-      
-   return dofiles(fileextension, vendor, filetype, comment, apppath, force)
+
+   ret = modMimelist()
+   if ret:   return ret
+   return registerMimeType(fileextension, vendor, filetype, comment, apppath, force)
 
 if __name__ == "__main__":
    sys.exit(main())
