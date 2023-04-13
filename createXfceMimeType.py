@@ -114,18 +114,21 @@ Comment={comment}
          if state == "D":
             b="" # no ';' for [default appl]
             state = "done"
-         l=mimetype + "=" + desktopfn + b
+         if not desktopfn in l:
+            l=mimetype + "=" + desktopfn + b
          if state == "A": state = "D"
       if l=="[Added Associations]": state="A"
       if l=="[Default Applications]":
          if state !="D":   # not written
             if not ml2[-1]: ml2.pop()   # remove last line, if empty
             ml2.append(mimetype +"="+ desktopfn +";")
+            ml2.append("")
          state="D"
       if l=="[Removed Associations]":
          if state !="done":   # not written
             if not ml2[-1]: ml2.pop()   # remove last line, if empty
             ml2.append(mimetype +"="+ desktopfn)
+            ml2.append("")
          state="D"
       ml2.append(l)
    ml = os.linesep.join(ml2)
