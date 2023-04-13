@@ -26,15 +26,22 @@ text/x-myvendor-mytype=myapplication.desktop
 
 import sys,os
 
-__version__="0.0.1"
-__revision__="0"
+__version__="0.0.3"
+__revision__="1"
 
 
 class globs:
    verbosity=1
+   fileextension=None
+   vendor="extension"
+   filetype=None
+   apppath=None
+   comment=""
+   force = False
+   interactive = 0
 
-   
-def registerMimeType(fileextension=None, vendor="ano", filetype=None, comment="",
+
+def registerMimeType(fileextension=None, vendor="extension", filetype=None, comment="",
             apppath=None, force=0):
    """
    write xml-file and register new filetype with file-extension
@@ -66,14 +73,64 @@ def registerMimeType(fileextension=None, vendor="ano", filetype=None, comment=""
 </mime-type>
 </mime-info>
    """)
+
    # the following line registers mime-type and copies the xml to ~/.local/share/mime/packages/
    return os.popen("xdg-mime install " + fn)._proc.wait()
 
-def modMimelist():
+def modMimelist(apppath, mimetype, comment="",
+             force=0):
    """
    modificate the mime-list and register application
    :return: 0=ok
    """
+   mlist = os.path.expanduser("~/.config/mimeapps.list")
+   # write desktop file
+   app = os.path.basename(apppath)
+   desktopfn = f"userapp-{app}.desktop"
+   with open(os.path.expanduser(
+           f"~/.local/share/applications/{desktopfn}")
+           ,"w") as f:
+      f.write(
+      f"""[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+NoDisplay=true
+Exec={apppath} %f
+Name={app}
+Comment={comment}
+"""
+      )
+   with open(mlist,"r") as f:
+      mlines = f.readlines()
+
+   ml2 = []
+   state = None
+   for l in mlines:
+      l=l.strip()
+      if mimetype in l:
+         a,b = l.split("=",1)
+         b = ";"+b
+         if state == "D":
+            b="" # no ';' for [default appl]
+            state = "done"
+         l=mimetype + "=" + desktopfn + b
+         if state == "A": state = "D"
+      if l=="[Added Associations]": state="A"
+      if l=="[Default Applications]":
+         if state !="D":   # not written
+            if not ml2[-1]: ml2.pop()   # remove last line, if empty
+            ml2.append(mimetype +"="+ desktopfn +";")
+         state="D"
+      if l=="[Removed Associations]":
+         if state !="done":   # not written
+            if not ml2[-1]: ml2.pop()   # remove last line, if empty
+            ml2.append(mimetype +"="+ desktopfn)
+         state="D"
+      ml2.append(l)
+   ml = os.linesep.join(ml2)
+   with open(mlist, "w") as f:
+      f.write(ml)
    return 0
 
 def main():
@@ -81,19 +138,20 @@ def main():
    read cmd line params and start
    :return: 0=ok
    """
-   fileextension=None
-   vendor="extension"
-   filetype=None
-   apppath=None   
-   comment=""
-   force = False
+   # fileextension=None
+   # vendor="extension"
+   # filetype=None
+   # apppath=None
+   # comment=""
+   # force = False
+   # interactive = 0
    
-   if 0:    # test
-      fileextension=".test3"
-      filetype="mytype3"
-      apppath="~/prg/t/exe3.sh"
-      comment="my test-type-3"
-      force=1
+   if 1:    # test
+      globs.fileextension=".test3"
+      globs.filetype="mytype3"
+      globs.apppath="~/prg/t/exe3.sh"
+      globs.comment="my test-type-3"
+      globs.force=1
    
    print("create a mime-type from file-extension for xfce-desktop")
    
@@ -106,18 +164,34 @@ def main():
         print("createXfceMimeType " + __version__ + "." + __revision__)
         print(__doc__)
         sys.exit(0)
-      if p == "-e": fileextension = p1
-      if p == "-p": vendor = p1
-      if p == "-t": filetype = p1
-      if p == "-f": force = int(p1)
-      if p == "-a": apppath = p1
-      if p == "-c": comment = p1
+      if p == "-e": globs.fileextension = p1
+      if p == "-p": globs.vendor = p1
+      if p == "-t": globs.filetype = p1
+      if p == "-f": globs.force = int(p1)
+      if p == "-a": globs.apppath = p1
+      if p == "-c": globs.comment = p1
+      if p == "-i": globs.interactive = 1
       if p == "-v": globs.verbosity = int(p1)
       if p == "-V": print("Version: " + __version__ + "." + __revision__)
 
-   ret = modMimelist()
+   if globs.interactive:
+      interactiveParams()
+   ret = modMimelist(globs.apppath, f"application/x-{globs.vendor}-{globs.filetype}",
+                     globs.comment,  globs.force)
+
    if ret:   return ret
-   return registerMimeType(fileextension, vendor, filetype, comment, apppath, force)
+   return registerMimeType(globs.fileextension, globs.vendor, globs.filetype,
+                     globs.comment, globs.apppath, globs.force)
+
+def interactiveParams():
+   print("change parameters, or just press [Enter] to unchange.")
+   def getit(value):
+      va = getattr(globs,value)
+      v=input(f"{value} ({va}) ")
+      if v: setattr(globs,value,v)
+   for v in ("fileextension", "vendor", "filetype", "comment", "apppath"):
+      getit(v)
+   return 0
 
 if __name__ == "__main__":
    sys.exit(main())
