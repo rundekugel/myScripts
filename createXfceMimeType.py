@@ -9,7 +9,7 @@ params:
 -p=<vendor-prefix>   default=extension
 -f=<0|1>             force overwriting existing files. Be careful!
 -c=<comment>         optional explanation of new filetype.
-
+-i                   interactive 
 """
 # todo: -a=<full application path>  application to open the files with the specific extension
 
@@ -141,22 +141,14 @@ def main():
    read cmd line params and start
    :return: 0=ok
    """
-   # fileextension=None
-   # vendor="extension"
-   # filetype=None
-   # apppath=None
-   # comment=""
-   # force = False
-   # interactive = 0
-   
-   if 1:    # test
+   if 0:    # test
       globs.fileextension=".test3"
       globs.filetype="mytype3"
       globs.apppath="~/prg/t/exe3.sh"
       globs.comment="my test-type-3"
       globs.force=1
    
-   print("create a mime-type from file-extension for xfce-desktop")
+   print("create a mime-type from file-extension for xfce-desktop"+os.linesep)
    
    for arg in sys.argv[1:]:
       p = arg.split("=", 1);
