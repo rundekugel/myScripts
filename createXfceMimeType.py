@@ -4,14 +4,16 @@ create a mime-type from file-extension for xfce-desktop to tell thunar to open i
 desired application
 
 params:
--e=<fileextension>   the fileextension which shall be opened
--t=<filetype>        new name for a filetype
--p=<vendor-prefix>   default=extension
--f=<0|1>             force overwriting existing files. Be careful!
+-a=<application path>  application to open the files with the specific extension
 -c=<comment>         optional explanation of new filetype.
--i                   interactive 
+-e=<fileextension>   the fileextension which shall be opened
+-f=<0|1>             force overwriting existing files. Be careful!
+-i                   interactive
+-p=<vendor-prefix>   default=extension
+-t=<filetype>        new name for a filetype
 """
-# todo: -a=<full application path>  application to open the files with the specific extension
+
+# todo: -r remove
 
 """
 debug info:
@@ -21,8 +23,6 @@ text/x-myvendor-mytype=myapplication.desktop
 ~/.local/share/mime/application/
 ~/.local/share/mime/packages/
 """
-
-
 
 import sys,os
 
@@ -171,6 +171,11 @@ def main():
 
    if globs.interactive:
       interactiveParams()
+   if not globs.fileextension:
+      print("createXfceMimeType " + __version__ + "." + __revision__)
+      print(__doc__)
+      sys.exit(1)
+
    ret = modMimelist(globs.apppath, f"application/x-{globs.vendor}-{globs.filetype}",
                      globs.comment,  globs.force)
 
