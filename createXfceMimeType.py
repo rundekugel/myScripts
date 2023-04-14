@@ -11,23 +11,8 @@ params:
 -i                   interactive
 -p=<vendor-prefix>   default=ext
 -t=<filetype>        new name for a filetype
+not yet: -installthunar       install as custom action for thunar
 
-you may add this:
-<action>
-	<icon></icon>
-	<name>register this extension</name>
-	<unique-id>1681513149330226-1</unique-id>
-	<command>zenity --info --text &quot;`/home/gaul1/bin/createXfceMimeType.py -e=%f`&quot;</command>
-	<description>register extension as mime-type</description>
-	<patterns>*</patterns>
-	<startup-notify/>
-	<audio-files/>
-	<image-files/>
-	<other-files/>
-	<text-files/>
-	<video-files/>
-</action>
-to your  ~/.config/Thunar/uca.xml
 """
 
 # todo: -r remove
@@ -57,6 +42,30 @@ class globs:
    force = False
    interactive = 0
 
+def installThunar():
+  """install this app in thunar"""
+  mypath = sys.argv[0]
+  add = \
+  f"""
+<action>
+  <icon></icon>
+  <name>register this extension</name>
+  <unique-id>1681513149330226-1</unique-id>
+  <command>zenity --info --text "`{mypath} -e=%f`"</command>
+  <description>register extension as mime-type</description>
+  <patterns>*</patterns>
+  <startup-notify/>
+  <audio-files/>
+  <image-files/>
+  <other-files/>
+  <text-files/>
+  <video-files/>
+</action>
+"""
+  # todo insert before </actions>
+  with open(os.path.expanduser("~/.config/Thunar/uca.xml"),'a') as f:
+    f.write(add)
+  sys.exit(0)
 
 def registerMimeType(fileextension=None, vendor="extension", filetype=None, comment="",
             apppath=None, force=0):
@@ -70,7 +79,7 @@ def registerMimeType(fileextension=None, vendor="extension", filetype=None, comm
    :param force: 1=overwrite existing file
    :return: 0=ok
    """
-   # search for fileext. in xml files first. 
+   # search for fileext. in xml files first.
    while fileextension[0] == ".":
       fileextension=fileextension[1:]
    fn = None
@@ -209,6 +218,7 @@ def main():
       if p == "-i": globs.interactive = 1
       if p == "-v": globs.verbosity = int(p1)
       if p == "-V": print("Version: " + __version__ + "." + __revision__)
+      if p == "-installthunar": installThunar()
 
    if globs.interactive:
       interactiveParams()
