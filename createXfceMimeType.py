@@ -11,6 +11,23 @@ params:
 -i                   interactive
 -p=<vendor-prefix>   default=ext
 -t=<filetype>        new name for a filetype
+
+you may add this:
+<action>
+	<icon></icon>
+	<name>register this extension</name>
+	<unique-id>1681513149330226-1</unique-id>
+	<command>zenity --info --text &quot;`/home/gaul1/bin/createXfceMimeType.py -e=%f`&quot;</command>
+	<description>register extension as mime-type</description>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+to your  ~/.config/Thunar/uca.xml
 """
 
 # todo: -r remove
@@ -26,7 +43,7 @@ text/x-myvendor-mytype=myapplication.desktop
 
 import sys,os
 
-__version__="0.1.0"
+__version__="0.2.0"
 __revision__="1"
 
 
@@ -200,8 +217,8 @@ def main():
       print("createXfceMimeType " + __version__ + "." + __revision__)
       print(__doc__)
       sys.exit(1)
-   while globs.fileextension[0] == ".":
-      globs.fileextension=globs.fileextension[1:]
+   if "." in globs.fileextension:
+      globs.fileextension=globs.fileextension.split(".")[-1]
    if not globs.filetype:
       globs.filetype = globs.fileextension +"-file"
    globs.filetype = globs.filetype.replace(" ","-")
