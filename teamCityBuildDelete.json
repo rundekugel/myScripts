@@ -1,0 +1,11 @@
+{
+"info":"teamCityBuildDelete Config demo file. jobname, min buildnumber, maxbuildnumber",
+"server":"the-ip-or-servername.org",
+"user":"John",
+"verbosity":2,
+"jobs":[
+    ["ProjectC_FlasherPayload",36,12000],
+    ["Project4_Bootloaderupdate",37,12007],
+    ["ProjectC_Bootloader"]
+]
+}
