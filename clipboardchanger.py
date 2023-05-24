@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 #  -*- coding: utf-8 -*-
 #
 """GUI to manipulate clipboard"""
@@ -7,7 +7,7 @@ import time
 import os
 
 __revision__ = "$Rev: 2 $"[6:-1]
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "lifesim.de"
 
 try:
@@ -34,11 +34,16 @@ class Guicb:
     letterlist =""
     checkbefore = False # check if the char before the keyword is a letter
     checkafter = True
-    casesensitive = True
+    casesensitive = True  # todo: implement insensitive 
     
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
+        _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+        _fgcolor = '#000000'  # X11 color: 'black'
+        _compcolor = '#d9d9d9' # X11 color: 'gray85'
+        _ana1color = '#d9d9d9' # X11 color: 'gray85'
+        _ana2color = '#ececec' # Closest X11 color: 'gray92'
 
         rzminmax_support = self
         self.initLetterlist()
@@ -50,9 +55,14 @@ class Guicb:
             self._top = tk.Tk()
             top = self._top
         top.geometry("300x50+50+50")
-
+        #top.minsize(120, 1)
+        #top.maxsize(5534, 1666)
         top.resizable(1,  1)
         top.title("Change Clipboard content")
+        # top.configure(background="#d9d9d9")
+        # top.configure(highlightbackground="#d9d9d9")
+        # top.configure(highlightcolor="black")
+
 
         self.BChange = tk.Button(top)
         self.BChange.place(relx=0.1, rely=0.1, height=24, width=50)
@@ -65,7 +75,7 @@ class Guicb:
       ll=""
       for b in range(0,26):
         ll+= chr(65+b) + chr(97+b)
-      ll+="äöüÄÖÜëß"
+      ll+="äöüÄÖÜëß"  # todo: add more here
       self.letterlist = ll
 
     def doChange(self):
@@ -84,7 +94,7 @@ class Guicb:
             pos = leng #next key
             continue
           if self.checkafter:
-            nx= cb[pos+len(key)]
+            nx= cb[pos+len(key):-1]
             if nx in self.letterlist:
               pos += len(key)
               continue
@@ -135,4 +145,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-# eof
