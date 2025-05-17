@@ -2,6 +2,7 @@
 
 """
 alarmclock depending on environment read from ip-address
+by gaul1-lifesim.de
 usage:
   weckerLoc.pyw [params]
   
