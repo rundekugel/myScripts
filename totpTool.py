@@ -7,7 +7,7 @@ parameter:
     -v=<token>          verify this token
     -t=<tolerance>      tolerance in seconds, default=10
     -V=<verbosity>      0..9
-    -L=<loop>           1..oo show actual HOTP-Token in a one-second-loop. 
+    -L=<loop>           1..oo show actual HOTP-Token in a one-second-loop. -1=infinity. default=0
 
 return value:
     0   token verify success
@@ -86,11 +86,14 @@ def main():
         return retval
     while globs.loop:
         globs.loop -= 1
+        print("--------------------------------")
         print("Time: ",round(time.time()))
         print("Token: ", t2.now())
         print("Last token -10 sec: ", t2.generate_otp(int((time.time()-10)/globs.intervall)) )
         print("Next token +10 sec: ", t2.generate_otp(int((time.time()+10)/globs.intervall)) )
-        print("Time left:", globs.intervall-int(time.time()+.5)%globs.intervall)
+        br = int(time.time()+.5)%globs.intervall
+        t= globs.intervall -br
+        print("Time left:", t, "I"*t + ":"*br)
         time.sleep(1)
     return retval
     
