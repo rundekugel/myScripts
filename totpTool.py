@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-HOTP test script to test 
+TOTP Tool by rundekugel @ github
+
 parameter:
     -k=<base32encoded secret>
     -i=<interval>       default=30
@@ -22,7 +23,7 @@ import time
 import sys
 
 __author__ = "rundekugel@github"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 class globs:
     base32encoded_secret = None
