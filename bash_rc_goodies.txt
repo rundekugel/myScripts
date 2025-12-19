@@ -1,0 +1,31 @@
+# some useful bash_rc extension
+# choose the ones, you like and add it to your ~/.bash_rc
+# collected by rundekugel@github
+#-------------------------------------
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+# Extend the history size 
+HISTSIZE=10000
+HISTFILESIZE=20000
+# append, clear, re-load history from history file
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+#-------------------------------------
+
+
+ #how deep?
+ if [ -n "$bashcounter" ]; then
+         PS1="${PS1:0:(-3)}+$bashcounter\$ "
+ fi
+ bashcounter=$((bashcounter+1))
+ export bashcounter
+#-------------------------------------
+
+# this is missing in a few distros
+SSHAGENT=/usr/bin/ssh-agent
+SSHAGENTARGS="-s"
+if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then
+    eval `$SSHAGENT $SSHAGENTARGS`
+    trap "kill $SSH_AGENT_PID" 0
+fi
+#-------------------------------------
