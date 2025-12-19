@@ -4,6 +4,7 @@
 #-------------------------------------
 
 # append to the history file, don't overwrite it
+# source: https://blog.adebski.com
 shopt -s histappend
 # Extend the history size 
 HISTSIZE=10000
